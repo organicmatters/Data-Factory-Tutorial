@@ -1,0 +1,25 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "heartcsv",
+						"type": "DatasetReference"
+					},
+					"name": "HeartSource"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
+				}
+			],
+			"script": "\n\nsource(output(\n\t\tage as short,\n\t\tsex as boolean,\n\t\tcp as short,\n\t\ttrestbps as short,\n\t\tchol as short,\n\t\tfbs as boolean,\n\t\trestecg as short,\n\t\tthalach as short,\n\t\texang as boolean,\n\t\toldpeak as double,\n\t\tslope as short,\n\t\tca as short,\n\t\tthal as short,\n\t\ttarget as boolean\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> HeartSource\nHeartSource derive(age = toString(byName('age')),\n\t\tsex = toString(byName('sex')),\n\t\tcp = toString(byName('cp')),\n\t\ttrestbps = toString(byName('trestbps')),\n\t\tchol = toString(byName('chol')),\n\t\tfbs = toString(byName('fbs')),\n\t\trestecg = toString(byName('restecg')),\n\t\tthalach = toString(byName('thalach')),\n\t\texang = toString(byName('exang')),\n\t\toldpeak = toString(byName('oldpeak')),\n\t\tslope = toString(byName('slope')),\n\t\tca = toString(byName('ca')),\n\t\tthal = toString(byName('thal')),\n\t\ttarget = toString(byName('target'))) ~> MapDrifted1"
+		}
+	}
+}
